@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Organización SILACORP - Cursos de Brigadas de Emergencia</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Define CSS variables for colors to easily manage the theme */
+        :root {
+            --primary-color: #e50000; /* Red as primary brand color */
+            --secondary-color: #ffffff; /* White for backgrounds and text contrast */
+            --text-color: #333333; /* Dark grey for general text */
+            --light-grey: #f4f4f4; /* Light grey for section backgrounds */
+            --dark-grey: #444444; /* Medium grey for footers and some labels */
+            --accent-gold: #ffcc00; /* Gold/Yellow for additional accents and highlights */
+            --logo-blue: #1A237E; /* Blue from the actual logo, can be used for specific elements if desired */
+        }
+
+        /* Basic body styling for consistent typography and background */
+        body {
+            font-family: 'Open Sans', sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            background-color: var(--light-grey);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; /* Prevent horizontal scrolling on smaller screens */
+        }
+
+        /* Header section styling with a gradient background and shadow */
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, #cc0000 100%); /* Red gradient */
+            color: var(--secondary-color);
+            padding: 30px 0;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+            border-bottom-left-radius: 15px;
+            border-bottom-right-radius: 15px;
+        }
+
+        /* Container for the logo image */
+        .logo-container {
+            margin-bottom: 20px;
+        }
+
+        /* Styling for the logo image */
+        .logo {
+            max-width: 180px; /* Max width for responsiveness */
+            height: auto; /* Maintain aspect ratio */
+            border-radius: 10px; /* Rounded corners for the logo */
+            border: 3px solid var(--secondary-color); /* White border around the logo */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+            background-color: var(--secondary-color); /* Ensures background for transparent logos */
+            padding: 5px; /* Small padding inside the border */
+        }
+
+        /* Main heading (H1) styling for the organization name */
+        h1 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 4em; /* Large font size for impact */
+            margin: 15px 0 5px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* Text shadow for depth */
+        }
+
+        /* Section heading (H2) styling */
+        h2 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2.5em;
+            color: var(--primary-color); /* Red color for section titles */
+            text-align: center;
+            margin: 50px 0 25px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        /* Underline effect for H2 headings */
+        h2::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background-color: var(--accent-gold); /* Gold accent line */
+            border-radius: 2px;
+        }
+
+        /* Sub-heading (H3) styling */
+        h3 {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 2em;
+            color: var(--primary-color); /* Red color for sub-titles */
+            margin-bottom: 15px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        /* General section styling with padding, rounded corners, and shadow */
+        section {
+            padding: 50px 5%; /* Generous padding */
+            margin: 30px auto; /* Centered with margin */
+            max-width: 1200px; /* Max width for readability */
+            background-color: var(--secondary-color);
+            border-radius: 12px; /* More rounded corners */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15); /* Stronger shadow */
+            border-left: 5px solid var(--primary-color); /* Left accent border in red */
+            transition: transform 0.3s ease-in-out; /* Smooth hover effect */
+        }
+
+        /* Hover effect for sections */
+        section:hover {
+            transform: translateY(-5px); /* Slight lift on hover */
+        }
+
+        /* Grid layout for information items (Misión, Visión, Valores) */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Responsive grid */
+            gap: 35px; /* Spacing between grid items */
+            text-align: center;
+        }
+
+        /* Styling for individual information items within the grid */
+        .info-item {
+            background-color: var(--light-grey);
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border-bottom: 4px solid var(--accent-gold); /* Gold accent border at bottom */
+            transition: background-color 0.3s ease;
+        }
+
+        /* Hover effect for info items */
+        .info-item:hover {
+            background-color: #e0e0e0; /* Slightly darker grey on hover */
+        }
+
+        /* Icon styling within info items */
+        .info-item i {
+            font-size: 3.5em; /* Large icons */
+            color: var(--primary-color); /* Red icons */
+            margin-bottom: 20px;
+        }
+
+        /* Course objective section styling with gradient background */
+        .course-objective {
+            background: linear-gradient(45deg, var(--primary-color) 0%, #cc0000 100%); /* Red gradient */
+            color: var(--secondary-color);
+            padding: 40px;
+            border-radius: 12px;
+            margin-top: 40px;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Text styling within the course objective section */
+        .course-objective p {
+            font-size: 1.2em;
+            margin: 0;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Form container styling */
+        .form-container {
+            background-color: var(--secondary-color);
+            padding: 50px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+            max-width: 900px;
+            margin: 40px auto;
+            border-right: 5px solid var(--primary-color); /* Right accent border in red */
+        }
+
+        /* Styling for each form group (label + input) */
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        /* Label styling for form fields */
+        .form-group label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 700; /* Bolder labels */
+            color: var(--dark-grey);
+            font-size: 1.1em;
+        }
+
+        /* Styling for all input, select, and textarea elements in the form */
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="date"],
+        .form-group input[type="tel"],
+        .form-group input[type="file"], /* Specific styling for file input */
+        .form-group select,
+        .form-group textarea {
+            width: calc(100% - 24px); /* Full width minus padding and border */
+            padding: 14px;
+            border: 2px solid #ddd; /* Slightly thicker border */
+            border-radius: 8px; /* Rounded corners */
+            font-size: 1.05em;
+            box-sizing: border-box; /* Include padding and border in element's total size */
+            transition: border-color 0.3s ease, box-shadow 0.3s ease; /* Smooth transitions for focus */
+        }
+
+        /* Focus state for form inputs */
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary-color); /* Red border on focus */
+            box-shadow: 0 0 0 3px rgba(229, 0, 0, 0.2); /* Subtle red shadow on focus */
+            outline: none; /* Remove default browser outline */
+        }
+
+        /* Textarea specific styling */
+        .form-group textarea {
+            resize: vertical; /* Allow vertical resizing */
+            min-height: 100px; /* Minimum height for textarea */
+        }
+
+        /* Remove spin buttons for tel input in Firefox */
+        .form-group input[type="tel"] {
+            -moz-appearance: textfield;
+        }
+        /* Remove spin buttons for tel input in Webkit browsers */
+        .form-group input[type="tel"]::-webkit-outer-spin-button,
+        .form-group input[type="tel"]::-webkit-inner-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
+
+        /* Button group styling for alignment and spacing */
+        .button-group {
+            text-align: center;
+            margin-top: 40px;
+            display: flex;
+            flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+            justify-content: center;
+            gap: 20px; /* Spacing between buttons */
+        }
+
+        /* Styling for all buttons */
+        button {
+            background: linear-gradient(180deg, var(--primary-color) 0%, #cc0000 100%); /* Red gradient */
+            color: var(--secondary-color);
+            padding: 18px 35px; /* Larger padding for bigger buttons */
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Button shadow */
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Button hover effect */
+        button:hover {
+            background: linear-gradient(180deg, #cc0000 0%, var(--primary-color) 100%); /* Reverse gradient on hover */
+            transform: translateY(-3px); /* More pronounced lift */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Styling for success/error messages */
+        .message {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.1em;
+            display: none; /* Hidden by default, shown by JavaScript */
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Specific styling for success messages */
+        .message.success {
+            background-color: #d4edda; /* Light green background */
+            color: #155724; /* Dark green text */
+            border: 1px solid #c3e6cb; /* Green border */
+        }
+
+        /* Social media links section styling */
+        .social-links {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--primary-color) 0%, #cc0000 100%); /* Red gradient */
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+            margin-top: 50px;
+            box-shadow: 0 -6px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Styling for social media icons */
+        .social-links a {
+            color: var(--secondary-color);
+            font-size: 3em; /* Large icons */
+            margin: 0 20px;
+            transition: color 0.3s ease, transform 0.3s ease; /* Smooth transitions */
+        }
+
+        /* Hover effect for social media icons */
+        .social-links a:hover {
+            color: var(--accent-gold); /* Gold accent on hover */
+            transform: translateY(-5px) scale(1.1); /* Lift and slightly enlarge */
+        }
+
+        /* WhatsApp floating button styling */
+        .whatsapp-button {
+            position: fixed; /* Fixed position on screen */
+            bottom: 30px;
+            right: 30px;
+            background-color: #25D366; /* WhatsApp Green */
+            color: var(--secondary-color);
+            border-radius: 50%; /* Circular shape */
+            width: 70px; /* Size of the button */
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em; /* Icon size */
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            z-index: 1000; /* Ensure it's above other content */
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+
+        /* WhatsApp button hover effect */
+        .whatsapp-button:hover {
+            transform: scale(1.15); /* More pronounced enlarge */
+            background-color: #1DA851; /* Darker green on hover */
+        }
+
+        /* Footer styling */
+        footer {
+            background-color: var(--dark-grey);
+            color: var(--secondary-color);
+            text-align: center;
+            padding: 25px 0;
+            margin-top: 30px;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 15px;
+        }
+
+        /* Media Queries for responsiveness */
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 3em;
+            }
+
+            h2 {
+                font-size: 2em;
+            }
+
+            h3 {
+                font-size: 1.7em;
+            }
+
+            section {
+                padding: 30px 4%;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr; /* Stack items vertically on smaller screens */
+            }
+
+            .form-container {
+                padding: 30px;
+            }
+
+            .button-group {
+                flex-direction: column; /* Stack buttons vertically */
+                gap: 15px;
+            }
+
+            button {
+                width: 100%; /* Full width buttons on smaller screens */
+                margin: 0; /* Remove horizontal margin */
+            }
+
+            .social-links a {
+                font-size: 2.5em;
+                margin: 0 15px;
+            }
+
+            .whatsapp-button {
+                width: 60px;
+                height: 60px;
+                font-size: 2.5em;
+                bottom: 20px;
+                right: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2.2em;
+            }
+
+            h2 {
+                font-size: 1.8em;
+            }
+
+            .form-container {
+                padding: 20px;
+            }
+
+            .social-links a {
+                font-size: 2em;
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo-container">
+            <!--
+                IMPORTANTE: Reemplaza la URL de 'src' con la URL pública de tu logotipo real.
+                Puedes subir tu imagen a un repositorio de GitHub y obtener el enlace "Raw" (Crudo) de la imagen.
+                Ejemplo: <img src="https://raw.githubusercontent.com/tu-usuario/tu-repositorio/main/tu_logo.png" alt="Logo de SILACORP" class="logo">
+                Actualmente, es un marcador de posición de placehold.co que simula un logo de seguridad.
+            -->
+            <img src="https://placehold.co/180x180/e50000/ffffff?text=SILACORP%0A%0A%E2%9A%96%EF%B8%8F" alt="Logo de SILACORP" class="logo">
+        </div>
+        <h1>ORGANIZACIÓN SILACORP</h1>
+        <p>Expertos en Capacitación de Brigadas de Emergencia</p>
+    </header>
+
+    <section id="about">
+        <h2>¿Quiénes Somos?</h2>
+        <div class="info-grid">
+            <div class="info-item">
+                <i class="fas fa-bullseye"></i>
+                <h3>Misión</h3>
+                <p>Capacitar integralmente a individuos y organizaciones en la prevención y respuesta ante emergencias, fomentando una cultura de seguridad y autoprotección.</p>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-eye"></i>
+                <h3>Visión</h3>
+                <p>Ser la organización líder a nivel nacional en la formación de brigadas de emergencia, reconocida por la excelencia, innovación y el impacto positivo en la seguridad comunitaria.</p>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-hands-helping"></i>
+                <h3>Valores</h3>
+                <ul>
+                    <li>Compromiso</li>
+                    <li>Excelencia</li>
+                    <li>Integridad</li>
+                    <li>Solidaridad</li>
+                    <li>Innovación</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section id="courses-objective">
+        <h2>Objetivo de Nuestros Cursos</h2>
+        <div class="course-objective">
+            <p>Proveer a los participantes los conocimientos, habilidades y herramientas necesarias para actuar de manera efectiva y segura ante diversas situaciones de emergencia, minimizando riesgos y salvaguardando vidas y bienes.</p>
+        </div>
+    </section>
+
+    <section id="enrollment">
+        <h2>Formulario de Inscripción a Cursos</h2>
+        <div class="form-container">
+            <form id="enrollmentForm">
+                <div class="form-group">
+                    <label for="nombre">Nombre Completo:</label>
+                    <input type="text" id="nombre" name="nombre" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+                    <input type="date" id="fechaNacimiento" name="fechaNacimiento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="curso">Selecciona el Curso:</label>
+                    <select id="curso" name="curso" required>
+                        <option value="">-- Selecciona un curso --</option>
+                        <option value="Brigada de Emergencias">Brigada de Emergencias</option>
+                        <option value="Primeros Auxilios">Primeros Auxilios</option>
+                        <option value="Combate Contra Incendios">Combate Contra Incendios</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="modalidad">Modalidad del Curso:</label>
+                    <select id="modalidad" name="modalidad" required>
+                        <option value="">-- Selecciona modalidad --</option>
+                        <option value="Presencial">Presencial</option>
+                        <option value="Virtual">Virtual</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono (10 dígitos):</label>
+                    <input type="tel" id="telefono" name="telefono" maxlength="10" pattern="[0-9]{10}" placeholder="Ej: 5512345678" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">E-mail:</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="ciudad">Ciudad:</label>
+                    <input type="text" id="ciudad" name="ciudad" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select id="estado" name="estado" required>
+                        <option value="">-- Selecciona tu estado --</option>
+                        <option value="Aguascalientes">Aguascalientes</option>
+                        <option value="Baja California">Baja California</option>
+                        <option value="Baja California Sur">Baja California Sur</option>
+                        <option value="Campeche">Campeche</option>
+                        <option value="Chiapas">Chiapas</option>
+                        <option value="Chihuahua">Chihuahua</option>
+                        <option value="Coahuila">Coahuila</option>
+                        <option value="Colima">Colima</option>
+                        <option value="Durango">Durango</option>
+                        <option value="Estado de México">Estado de México</option>
+                        <option value="Guanajuato">Guanajuato</option>
+                        <option value="Guerrero">Guerrero</option>
+                        <option value="Hidalgo">Hidalgo</option>
+                        <option value="Jalisco">Jalisco</option>
+                        <option value="Michoacán">Michoacán</option>
+                        <option value="Morelos">Morelos</option>
+                        <option value="Nayarit">Nayarit</option>
+                        <option value="Nuevo León">Nuevo León</option>
+                        <option value="Oaxaca">Oaxaca</option>
+                        <option value="Puebla">Puebla</option>
+                        <option value="Querétaro">Querétaro</option>
+                        <option value="Quintana Roo">Quintana Roo</option>
+                        <option value="San Luis Potosí">San Luis Potosí</option>
+                        <option value="Sinaloa">Sinaloa</option>
+                        <option value="Sonora">Sonora</option>
+                        <option value="Tabasco">Tabasco</option>
+                        <option value="Tamaulipas">Tamaulipas</option>
+                        <option value="Tlaxcala">Tlaxcala</option>
+                        <option value="Veracruz">Veracruz</option>
+                        <option value="Yucatán">Yucatán</option>
+                        <option value="Zacatecas">Zacatecas</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comentarios">Comentarios:</label>
+                    <textarea id="comentarios" name="comentarios" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="cvFile">Adjuntar CV (PDF, DOC, DOCX):</label>
+                    <input type="file" id="cvFile" name="cvFile" accept=".pdf,.doc,.docx" required>
+                </div>
+
+                <div class="button-group">
+                    <button type="submit" id="generarInscripcion">Generar Inscripción</button>
+                    <button type="button" id="exportarRecibo">Exportar Recibo en PDF</button>
+                </div>
+
+                <div id="successMessage" class="message success">
+                    ¡Te has inscrito correctamente!
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <div class="social-links">
+        <a href="https://www.facebook.com/SILACORP" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="https://www.instagram.com/SILACORP" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="https://www.tiktok.com/@SILACORP" target="_blank" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="https://www.linkedin.com/company/SILACORP" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+    </div>
+
+    <a href="https://wa.me/5215512345678" class="whatsapp-button" target="_blank" aria-label="WhatsApp">
+        <i class="fab fa-whatsapp"></i>
+    </a>
+
+    <footer>
+        <p>&copy; 2023 Organización SILACORP. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        // Ensure DOM is fully loaded before running JavaScript
+        document.addEventListener('DOMContentLoaded', () => {
+            // Get references to DOM elements
+            const enrollmentForm = document.getElementById('enrollmentForm');
+            const successMessage = document.getElementById('successMessage');
+            const exportReceiptBtn = document.getElementById('exportarRecibo');
+            const telefonoInput = document.getElementById('telefono');
+            const cvFileInput = document.getElementById('cvFile');
+
+            // Event listener to limit phone number input to 10 numeric digits
+            telefonoInput.addEventListener('input', function() {
+                // Remove non-numeric characters and truncate to 10 digits
+                this.value = this.value.replace(/[^0-9]/g, '').substring(0, 10);
+            });
+
+            // Event listener for form submission
+            enrollmentForm.addEventListener('submit', function(event) {
+                event.preventDefault(); // Prevent default form submission behavior
+
+                // Check if the form is valid according to HTML5 validation
+                if (enrollmentForm.checkValidity()) {
+                    successMessage.style.display = 'block'; // Show success message
+
+                    // In a real application, you would send the form data and CV file to a server here.
+                    // This client-side example only simulates success and logs data to console.
+                    console.log('Formulario enviado correctamente. Datos:', {
+                        nombre: document.getElementById('nombre').value,
+                        fechaNacimiento: document.getElementById('fechaNacimiento').value,
+                        curso: document.getElementById('curso').value,
+                        modalidad: document.getElementById('modalidad').value,
+                        telefono: document.getElementById('telefono').value,
+                        email: document.getElementById('email').value,
+                        ciudad: document.getElementById('ciudad').value,
+                        estado: document.getElementById('estado').value,
+                        comentarios: document.getElementById('comentarios').value,
+                        cvFileName: cvFileInput.files.length > 0 ? cvFileInput.files[0].name : 'No CV adjunto'
+                    });
+
+                    // Clear the form after a short delay to allow user to see the message
+                    setTimeout(() => {
+                        enrollmentForm.reset(); // Reset all form fields
+                        successMessage.style.display = 'none'; // Hide success message
+                    }, 3000); // Hide message and clear form after 3 seconds
+                } else {
+                    // If form is not valid, browser will show native HTML5 validation messages
+                    console.log('Formulario no válido. Por favor, revisa los campos.');
+                }
+            });
+
+            // Event listener for exporting receipt to PDF
+            exportReceiptBtn.addEventListener('click', () => {
+                // Check if the form is valid before generating PDF
+                if (!enrollmentForm.checkValidity()) {
+                    // Create and display a custom alert message, as window.alert() is not allowed
+                    const alertDiv = document.createElement('div');
+                    alertDiv.style.cssText = `
+                        position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+                        background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb;
+                        padding: 20px; border-radius: 8px; z-index: 9999;
+                        box-shadow: 0 4px 8px rgba(0,0,0,0.2); text-align: center;
+                        font-family: 'Open Sans', sans-serif; font-size: 1.1em;
+                    `;
+                    alertDiv.innerHTML = `
+                        <p>Por favor, completa todos los campos obligatorios del formulario antes de exportar el recibo.</p>
+                        <button onclick="this.parentNode.remove()" style="
+                            background-color: #dc3545; color: white; padding: 10px 20px;
+                            border: none; border-radius: 5px; cursor: pointer; margin-top: 15px;
+                        ">Cerrar</button>
+                    `;
+                    document.body.appendChild(alertDiv);
+                    return; // Stop execution if form is not valid
+                }
+
+                const { jsPDF } = window.jspdf; // Get jsPDF object from global window
+                const doc = new jsPDF(); // Create a new jsPDF document
+
+                // Set title for the PDF
+                doc.setFontSize(22);
+                doc.setTextColor(229, 0, 0); // Set text color to SILACORP red
+                doc.text("Recibo de Inscripción - SILACORP", 105, 20, null, null, "center");
+
+                // Set font size and color for form data
+                doc.setFontSize(12);
+                doc.setTextColor(51, 51, 51); // Set text color to dark grey
+
+                let yPos = 40; // Initial Y position for text
+
+                // Helper function to add a field to the PDF
+                const addField = (label, value) => {
+                    doc.setFont(undefined, 'bold'); // Set font to bold for label
+                    doc.text(`${label}:`, 20, yPos);
+                    doc.setFont(undefined, 'normal'); // Set font back to normal for value
+                    doc.text(value, 60, yPos);
+                    yPos += 10; // Increment Y position for next line
+                };
+
+                // Add all form fields to the PDF
+                addField("Nombre", document.getElementById('nombre').value);
+                addField("Fecha de Nacimiento", document.getElementById('fechaNacimiento').value);
+                addField("Curso", document.getElementById('curso').value);
+                addField("Modalidad", document.getElementById('modalidad').value);
+                addField("Teléfono", document.getElementById('telefono').value);
+                addField("E-mail", document.getElementById('email').value);
+                addField("Ciudad", document.getElementById('ciudad').value);
+                addField("Estado", document.getElementById('estado').value);
+                addField("Comentarios", document.getElementById('comentarios').value || "Ninguno");
+
+                // Add CV attachment info (note: the file itself is NOT embedded in the PDF)
+                const cvFileName = cvFileInput.files.length > 0 ? cvFileInput.files[0].name : 'No adjuntado';
+                addField("CV Adjunto", cvFileName);
+
+
+                // Add a thank you message at the bottom
+                doc.setFontSize(10);
+                doc.setTextColor(102, 102, 102);
+                doc.text("Gracias por tu inscripción. ¡Te esperamos en el curso!", 105, yPos + 20, null, null, "center");
+                doc.text("Nota: Este recibo no incluye el archivo CV adjunto.", 105, yPos + 25, null, null, "center");
+
+
+                // Save the PDF with a specific filename
+                doc.save("recibo_inscripcion_SILACORP.pdf");
+            });
+        });
+    </script>
+</body>
+</html>
